@@ -42,6 +42,16 @@ function getStoredUser() {
     }
 }
 
+function isLoggedIn() {
+    return localStorage.getItem('loggedIn') === 'true';
+}
+
+function logout() {
+    localStorage.removeItem('loggedIn');
+    localStorage.removeItem('developerUser');
+    window.location.href = 'login.html';
+}
+
 function setStatusMessage(container, message, kind = 'loading') {
     if (!container) {
         return;
@@ -316,22 +326,23 @@ async function scanDeveloper(github, leetcode, codeforces) {
 }
 
 async function getProfile() {
-    const usernameInput = document.getElementById('username');
-    const result = document.getElementById('result');
-
-    if (!usernameInput || !result) {
-        return;
-    }
-
-    const username = usernameInput.value.trim();
-    if (!username) {
-        setError('result', 'ghBtn', 'username required');
-        return;
-    }
-
-    setLoading('result', 'ghBtn', `scanning github://${escapeHtml(username)}...`);
-
     try {
+        const usernameInput = document.getElementById('username');
+        const result = document.getElementById('result');
+
+        if (!usernameInput || !result) {
+            console.error('[Get Profile] Missing DOM elements');
+            return;
+        }
+
+        const username = usernameInput.value?.trim() || '';
+        if (!username) {
+            setError('result', 'ghBtn', 'username required');
+            return;
+        }
+
+        setLoading('result', 'ghBtn', `scanning github://${escapeHtml(username)}...`);
+
         const response = await fetch(`${API_BASE}/github?username=${encodeURIComponent(username)}`);
 
         if (!response.ok) {
@@ -371,14 +382,23 @@ async function getProfile() {
 
         clearLoading('ghBtn');
     } catch (error) {
-        setError('result', 'ghBtn', error.message);
+        setError('result', 'ghBtn', error?.message || 'Failed to fetch profile');
+        console.error('[Get Profile] Error:', error);
     }
 }
 
 async function getContests() {
-    setLoading('contestResult', 'contestBtn', 'fetching upcoming contests...');
-
     try {
+        const button = document.getElementById('contestBtn');
+        const result = document.getElementById('contestResult');
+
+        if (!button || !result) {
+            console.error('[Contests] Missing DOM elements');
+            return;
+        }
+
+        setLoading('contestResult', 'contestBtn', 'fetching upcoming contests...');
+
         const response = await fetch(`${API_BASE}/contests`);
 
         if (!response.ok) {
@@ -404,17 +424,15 @@ async function getContests() {
                 </div>`;
         }).join('');
 
-        const result = document.getElementById('contestResult');
-        if (result) {
-            result.innerHTML = `
-                <div class="result-block">
-                    <div class="contest-rail">${cards}</div>
-                </div>`;
-        }
+        result.innerHTML = `
+            <div class="result-block">
+                <div class="contest-rail">${cards}</div>
+            </div>`;
 
         clearLoading('contestBtn');
     } catch (error) {
-        setError('contestResult', 'contestBtn', error.message);
+        setError('contestResult', 'contestBtn', error?.message || 'Failed to fetch contests');
+        console.error('[Contests] Error:', error);
     }
 }
 
@@ -473,25 +491,26 @@ async function reviewCode() {
 }
 
 async function fetchLeetCodeStats() {
-    const input = document.getElementById('leetcodeUsername');
-    const result = document.getElementById('leetcodeResult');
-    const button = document.getElementById('leetBtn');
-
-    if (!input || !result || !button) {
-        return;
-    }
-
-    const username = input.value.trim();
-
-    if (!username) {
-        result.innerHTML = '<div class="error-message">Enter a username</div>';
-        return;
-    }
-
-    result.innerHTML = '<div class="loading">Fetching developer analytics...</div>';
-    button.disabled = true;
-
     try {
+        const input = document.getElementById('leetcodeUsername');
+        const result = document.getElementById('leetcodeResult');
+        const button = document.getElementById('leetBtn');
+
+        if (!input || !result || !button) {
+            console.error('[LeetCode] Missing DOM elements');
+            return;
+        }
+
+        const username = input.value?.trim() || '';
+
+        if (!username) {
+            result.innerHTML = '<div class="error-message">Enter a username</div>';
+            return;
+        }
+
+        result.innerHTML = '<div class="loading">Fetching developer analytics...</div>';
+        button.disabled = true;
+
         const response = await fetch(`${API_BASE}/leetcode?username=${encodeURIComponent(username)}`);
 
         if (!response.ok) {
@@ -500,7 +519,7 @@ async function fetchLeetCodeStats() {
 
         const data = await response.json();
 
-        if (data.error) {
+        if (data?.error) {
             throw new Error(data.error);
         }
 
@@ -517,10 +536,16 @@ async function fetchLeetCodeStats() {
                 </div>
             </div>`;
     } catch (error) {
-        result.innerHTML = '<div class="error-message">Failed to fetch LeetCode stats</div>';
-        console.error(error);
+        const result = document.getElementById('leetcodeResult');
+        if (result) {
+            result.innerHTML = `<div class="error-message">Failed to fetch LeetCode stats: ${escapeHtml(error?.message || 'Unknown error')}</div>`;
+        }
+        console.error('[LeetCode] Error:', error);
     } finally {
-        button.disabled = false;
+        const button = document.getElementById('leetBtn');
+        if (button) {
+            button.disabled = false;
+        }
     }
 }
 
@@ -710,19 +735,20 @@ function updatePasswordUI() {
 }
 
 async function loadMyDashboard() {
-    const user = getStoredUser();
-    const heading = document.getElementById('dashboardHeading');
-    const subtitle = document.getElementById('dashboardSubtitle');
-    const meta = document.getElementById('sessionMeta');
-    const result = document.getElementById('myDashboardResult');
-    const stats = document.getElementById('readmeStats');
+    try {
+        const user = getStoredUser();
+        const heading = document.getElementById('dashboardHeading');
+        const subtitle = document.getElementById('dashboardSubtitle');
+        const meta = document.getElementById('sessionMeta');
+        const result = document.getElementById('myDashboardResult');
+        const stats = document.getElementById('readmeStats');
 
-    if (!user) {
-        if (result) {
-            result.innerHTML = '<div class="error-message">No saved session found.</div>';
+        if (!user) {
+            if (result) {
+                result.innerHTML = '<div class="error-message">No saved session found. Please log in again.</div>';
+            }
+            return;
         }
-        return;
-    }
 
     if (heading) {
         heading.textContent = `welcome back, ${user.name || 'developer'}`;
@@ -744,84 +770,94 @@ async function loadMyDashboard() {
         result.innerHTML = '<div class="loading">loading saved developer intelligence...</div>';
     }
 
-    try {
-        const data = await scanDeveloper(user.github, user.leetcode, user.codeforces);
-        renderDeveloperScan('myDashboardResult', data, {
-            title: user.name,
-            kicker: 'my dashboard',
-            description: 'Auto-loaded from the saved session. No username re-entry required.'
-        });
-        renderReadmeStats('readmeStats', user.github);
+    const data = await scanDeveloper(user.github, user.leetcode, user.codeforces);
+    renderDeveloperScan('myDashboardResult', data, {
+        title: user.name,
+        kicker: 'my dashboard',
+        description: 'Auto-loaded from the saved session. No username re-entry required.'
+    });
+    renderReadmeStats('readmeStats', user.github);
     } catch (error) {
+        const result = document.getElementById('myDashboardResult');
+        const stats = document.getElementById('readmeStats');
         if (result) {
-            result.innerHTML = `<div class="error-message">${escapeHtml(error.message)}</div>`;
+            result.innerHTML = `<div class="error-message">Failed to load dashboard: ${escapeHtml(error?.message || 'Unknown error')}</div>`;
         }
         if (stats) {
             stats.innerHTML = '';
         }
+        console.error('[Load Dashboard] Error:', error);
     }
 }
 
 function initAuthPage() {
-    if (isLoggedIn()) {
-        window.location.href = 'dashboard.html';
-        return;
-    }
+    try {
+        if (isLoggedIn()) {
+            window.location.href = 'dashboard.html';
+            return;
+        }
 
-    const signupForm = document.getElementById('signupForm');
-    const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const loginForm = document.getElementById('loginForm');
 
-    if (signupForm) {
-        signupForm.addEventListener('submit', handleSignup);
+        if (signupForm) {
+            signupForm.addEventListener('submit', handleSignup);
             const pwd = document.getElementById('password');
             if (pwd) {
                 pwd.addEventListener('input', updatePasswordUI);
-                // init once
                 updatePasswordUI();
             }
-    }
+        }
 
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
+        if (loginForm) {
+            loginForm.addEventListener('submit', handleLogin);
+        }
+    } catch (error) {
+        console.error('[Auth Page Init] Error:', error);
     }
 }
 
 function initDashboardPage() {
-    if (!isLoggedIn()) {
-        window.location.href = 'login.html';
-        return;
-    }
+    try {
+        if (!isLoggedIn()) {
+            window.location.href = 'login.html';
+            return;
+        }
 
-    initClock();
-    initCodeWorkbench();
+        initClock();
+        initCodeWorkbench();
 
-    const usernameInput = document.getElementById('username');
-    if (usernameInput) {
-        usernameInput.addEventListener('keydown', event => {
-            if (event.key === 'Enter') {
-                getProfile();
+        const usernameInput = document.getElementById('username');
+        if (usernameInput) {
+            usernameInput.addEventListener('keydown', event => {
+                if (event.key === 'Enter') {
+                    getProfile();
+                }
+            });
+        }
+
+        const dashboardUser = getStoredUser();
+        if (dashboardUser) {
+            const githubInput = document.getElementById('scanGithub');
+            const leetcodeInput = document.getElementById('scanLeetcode');
+            const codeforcesInput = document.getElementById('scanCodeforces');
+
+            if (githubInput && !githubInput.value) {
+                githubInput.value = dashboardUser.github || '';
             }
-        });
+            if (leetcodeInput && !leetcodeInput.value) {
+                leetcodeInput.value = dashboardUser.leetcode || '';
+            }
+            if (codeforcesInput && !codeforcesInput.value) {
+                codeforcesInput.value = dashboardUser.codeforces || '';
+            }
+        }
+
+        loadMyDashboard();
+    } catch (error) {
+        console.error('[Dashboard Init] Error:', error);
+        window.location.href = 'login.html';
     }
-
-    const dashboardUser = getStoredUser();
-    if (dashboardUser) {
-        const githubInput = document.getElementById('scanGithub');
-        const leetcodeInput = document.getElementById('scanLeetcode');
-        const codeforcesInput = document.getElementById('scanCodeforces');
-
-        if (githubInput && !githubInput.value) {
-            githubInput.value = dashboardUser.github || '';
-        }
-        if (leetcodeInput && !leetcodeInput.value) {
-            leetcodeInput.value = dashboardUser.leetcode || '';
-        }
-        if (codeforcesInput && !codeforcesInput.value) {
-            codeforcesInput.value = dashboardUser.codeforces || '';
-        }
-    }
-
-    loadMyDashboard();
 }
 
 function initExploreForm() {
@@ -902,63 +938,62 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 async function generateLinkedInPost() {
-    const title = document.getElementById("projectTitle").value;
-    const stack = document.getElementById("techStack").value;
-    const description = document.getElementById("projectDescription").value;
-    const resultDiv = document.getElementById("linkedinPostResult");
-
-    resultDiv.innerHTML = `
-        <div class="loading">
-            generating linkedin post...
-        </div>
-    `;
-
     try {
+        const titleEl = document.getElementById("projectTitle");
+        const stackEl = document.getElementById("techStack");
+        const descEl = document.getElementById("projectDescription");
+        const resultDiv = document.getElementById("linkedinPostResult");
+
+        if (!titleEl || !stackEl || !descEl || !resultDiv) {
+            console.error('Missing required elements for LinkedIn post generator');
+            return;
+        }
+
+        const title = titleEl.value?.trim() || '';
+        const stack = stackEl.value?.trim() || '';
+        const description = descEl.value?.trim() || '';
+
+        if (!title || !stack || !description) {
+            resultDiv.innerHTML = `<div class="error-message">Please fill in all fields: Project Title, Tech Stack, and Description</div>`;
+            return;
+        }
+
+        resultDiv.innerHTML = `<div class="loading">generating linkedin post...</div>`;
+
         const response = await fetch(`${API_BASE}/career-tools`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                action: "linkedin-post",
-                title,
-                stack,
-                description
-            })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "linkedin-post", title, stack, description })
         });
 
         const data = await response.json();
 
-        console.log("STATUS:", response.status);
-        console.log("DATA:", data);
+        console.log("[LinkedIn Post] Status:", response.status);
+        console.log("[LinkedIn Post] Response:", data);
 
         if (!response.ok) {
-            resultDiv.innerHTML = `
-                <div class="error-message">
-                    ${data.error || "server error"}
-                </div>
-            `;
+            const errorMsg = data?.error || data?.message || `Server error (${response.status})`;
+            resultDiv.innerHTML = `<div class="error-message">${escapeHtml(errorMsg)}</div>`;
+            return;
+        }
 
+        const content = data?.result || data?.body || data?.message || '';
+        if (!content) {
+            resultDiv.innerHTML = `<div class="error-message">No response returned from server</div>`;
             return;
         }
 
         resultDiv.innerHTML = `
             <div class="scan-card">
-                <div class="panel-title" style="margin-bottom:18px;">
-                    Generated LinkedIn Post
-                </div>
-                <div style="white-space: pre-wrap; line-height: 1.8;">
-                    ${data.result}
-                </div>
+                <div class="panel-title" style="margin-bottom:18px;">Generated LinkedIn Post</div>
+                <div style="white-space: pre-wrap; line-height: 1.8;">${escapeHtml(content)}</div>
             </div>
         `;
     } catch (error) {
-        resultDiv.innerHTML = `
-            <div class="error-message">
-                failed to generate post
-            </div>
-        `;
-
-        console.error(error);
+        const resultDiv = document.getElementById("linkedinPostResult");
+        if (resultDiv) {
+            resultDiv.innerHTML = `<div class="error-message">Failed to generate post: ${escapeHtml(error?.message || 'Unknown error')}</div>`;
+        }
+        console.error('[LinkedIn Post] Error:', error);
     }
 }
