@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DEV.STATION // Sign Up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=JetBrains+Mono:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="signup">
+
+<div class="wrapper auth-shell">
+
+    <div class="top-bar">
+        <div class="logo">
+            <span class="logo-dot"></span>
+            <span>DEV.STATION</span>
+        </div>
+        <div class="status-bar">
+            <span>SYS <b>READY</b></span>
+            <span>NODE <b>IDENTITY</b></span>
+            <a class="gh-link auth-link" href="login.html">Login</a>
+        </div>
+    </div>
+
+    <section class="hero auth-hero">
+        <div class="hero-label">// create your node</div>
+        <h1>build your<br><em>developer identity</em></h1>
+        <p>Create your AI-powered developer intelligence account and save your handles for automatic dashboard loading on every visit.</p>
+    </section>
+
+    <section class="panel auth-panel">
+        <div class="panel-header">
+            <div style="display:flex;gap:14px;align-items:center;">
+                <span class="panel-tag">01</span>
+                <span class="panel-title">Sign Up</span>
+            </div>
+            <span class="panel-meta">account creation</span>
+        </div>
+
+        <div class="panel-body">
+            <form id="signupForm" class="scan-grid auth-grid">
+                <input type="text" id="name" placeholder="Full Name" autocomplete="name" required>
+                <input type="email" id="email" placeholder="Email Address" autocomplete="email" required>
+                <div>
+                    <input type="password" id="password" placeholder="Password" autocomplete="new-password" required>
+                    <div class="password-meta">
+                        <button type="button" id="togglePwd" class="small-ghost">Show</button>
+                        <div id="passwordStrength" class="password-strength">strength: —</div>
+                    </div>
+                </div>
+                <input type="text" id="github" placeholder="GitHub Username" autocomplete="username" required>
+                <input type="text" id="leetcode" placeholder="LeetCode Username" required>
+                <input type="text" id="codeforces" placeholder="Codeforces Handle" required>
+                <button type="submit" class="auth-submit">Create Account &rarr;</button>
+            </form>
+
+            <div id="signupMsg" class="auth-message"></div>
+
+            <div class="auth-footer-note">
+                Already have a session?
+                <a href="login.html">Log in</a>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

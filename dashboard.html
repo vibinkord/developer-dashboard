@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DEV.STATION // Command Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=JetBrains+Mono:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="dashboard">
+
+<div class="wrapper dashboard-shell">
+
+    <div class="top-bar">
+        <div class="logo">
+            <span class="logo-dot"></span>
+            <span>DEV.STATION</span>
+        </div>
+        <div class="status-bar">
+            <span>SYS <b>ONLINE</b></span>
+            <span>NODE <b>US-EAST-1</b></span>
+            <span id="clock">--:--:--</span>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <section class="hero dashboard-hero">
+        <div class="hero-label">// command_center v2.0</div>
+        <h1>your dev<br><em>command center</em></h1>
+        <p>A personalized developer intelligence platform that loads your saved handles, tracks your public developer footprint, and keeps exploratory scans separate from your identity-driven dashboard.</p>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header">
+            <div style="display:flex;gap:14px;align-items:center;">
+                <span class="panel-tag">01</span>
+                <span class="panel-title">My Dashboard</span>
+            </div>
+            <span class="panel-meta">auto-loaded profile</span>
+        </div>
+        <div class="panel-body">
+            <div class="dashboard-intro">
+                <div>
+                    <div class="hero-label" style="margin-bottom:12px;">// persistent session</div>
+                    <h2 id="dashboardHeading" class="dashboard-title">loading saved profile...</h2>
+                    <p id="dashboardSubtitle" class="dashboard-subtitle">your localStorage profile is being loaded into the active workspace.</p>
+                    <div id="sessionMeta" class="profile-chip-row"></div>
+                </div>
+                <div class="dashboard-sidecard">
+                    <div class="dashboard-sidecard-title">Session State</div>
+                    <p>Logged-in users move straight into their saved developer identity, with scan data, README stats, and persona output rendered automatically.</p>
+                </div>
+            </div>
+
+            <div id="myDashboardResult"></div>
+            <div id="readmeStats" class="readme-section"></div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header">
+            <div style="display:flex;gap:14px;align-items:center;">
+                <span class="panel-tag">02</span>
+                <span class="panel-title">Explore Developers</span>
+            </div>
+            <span class="panel-meta">manual profile search</span>
+        </div>
+        <div class="panel-body">
+            <form id="exploreForm">
+                <div class="scan-grid">
+                    <input type="text" id="exploreGithub" placeholder="GitHub Username" autocomplete="off">
+                    <input type="text" id="exploreLeetcode" placeholder="LeetCode Username" autocomplete="off">
+                    <input type="text" id="exploreCodeforces" placeholder="Codeforces Handle" autocomplete="off">
+                    <button type="submit" id="exploreScanBtn">Scan Developer</button>
+                </div>
+            </form>
+
+            <div id="exploreStatus" class="auth-message"></div>
+            <div id="exploreResult"></div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header">
+            <div style="display:flex;gap:14px;align-items:center;">
+                <span class="panel-tag">03</span>
+                <span class="panel-title">GitHub Profile Scan</span>
+            </div>
+            <span class="panel-meta">GET /github</span>
+        </div>
+        <div class="panel-body">
+            <div class="input-row">
+                <input type="text" id="username" placeholder="enter github username..." autocomplete="off" />
+                <button onclick="getProfile()" id="ghBtn" class="indigo">Run Query &rarr;</button>
+            </div>
+            <div id="result"></div>
+        </div>
+    </section>
+
+    <!-- moved LeetCode panel directly under GitHub Profile Scan for clearer flow -->
+    <section class="panel">
+        <div class="panel-header">
+            <div style="display:flex;gap:14px;align-items:center;">
+                <span class="panel-tag">04</span>
+                <span class="panel-title">LeetCode Analytics</span>
+            </div>
+            <span class="panel-meta">GET /leetcode</span>
+        </div>
+        <div class="panel-body">
+            <div class="input-row">
+                <input type="text" id="leetcodeUsername" placeholder="enter leetcode username..." autocomplete="off" />
+                <button onclick="fetchLeetCodeStats()" id="leetBtn" class="indigo">Analyze &rarr;</button>
+            </div>
+            <div id="leetcodeResult" class="leetcode-result">
+                <div class="placeholder">// search a leetcode profile to see analytics</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header">
+            <div style="display:flex;gap:14px;align-items:center;">
+                <span class="panel-tag">04</span>
+                <span class="panel-title">Upcoming Contests</span>
+            </div>
+            <span class="panel-meta">GET /contests</span>
+        </div>
+        <div class="panel-body">
+            <button onclick="getContests()" id="contestBtn" class="indigo">Fetch Contests &rarr;</button>
+            <div id="contestResult"></div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header">
+            <div style="display:flex;gap:14px;align-items:center;">
+                <span class="panel-tag">05</span>
+                <span class="panel-title">AI Code Review &middot; Workbench</span>
+            </div>
+            <span class="panel-meta">POST /review &middot; groq</span>
+        </div>
+        <div class="panel-body">
+            <div class="review-workbench">
+                <div class="workbench-pane">
+                    <div class="pane-header input-pane">
+                        <span class="pane-label">your_code.txt</span>
+                        <span class="pane-stat" id="codeStats">0 lines &middot; 0 chars</span>
+                    </div>
+                    <div class="editor-area">
+                        <div class="line-gutter" id="lineGutter">1</div>
+                        <textarea id="codeInput" class="code-editor" spellcheck="false" placeholder="// paste your code here..."></textarea>
+                    </div>
+                </div>
+
+                <div class="workbench-pane">
+                    <div class="pane-header output-pane">
+                        <span class="pane-label">analysis.md</span>
+                        <span class="pane-stat" id="reviewStat">idle</span>
+                    </div>
+                    <div class="review-output" id="reviewResult">
+                        <div class="empty-output">
+                            <div class="icon">AI</div>
+                            <h4>Awaiting input</h4>
+                            <p>Paste your code on the left, then hit Analyze. The review will appear here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+
+    <div class="panel-header">
+
+        <div class="panel-title">
+            LinkedIn Post Generator
+        </div>
+
+        <div class="panel-meta">
+            ai career tools
+        </div>
+
+    </div>
+
+    <div class="panel-body">
+
+        <div class="scan-grid">
+
+            <input
+                type="text"
+                id="projectTitle"
+                placeholder="Project Title"
+            >
+
+            <input
+                type="text"
+                id="techStack"
+                placeholder="Tech Stack"
+            >
+
+        </div>
+
+        <textarea
+            id="projectDescription"
+            rows="6"
+            placeholder="Describe your project..."
+        ></textarea>
+
+        <div style="margin-top:16px;">
+
+            <button onclick="generateLinkedInPost()">
+                Generate LinkedIn Post
+            </button>
+
+        </div>
+
+        <div
+            id="linkedinPostResult"
+            class="result-block"
+        ></div>
+
+    </div>
+
+</div>
+            <div class="workbench-toolbar">
+                <span class="toolbar-hint">
+                    Tip: press <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to analyze
+                </span>
+                <button onclick="reviewCode()" id="reviewBtn">Analyze Code &rarr;</button>
+            </div>
+        </div>
+    </section>
+
+    
+
+    <footer>
+        <span>// 2026 &middot; built on AWS Lambda + Groq</span>
+        <span class="brand-flair">&lt;/&gt; HAPPY HACKING</span>
+    </footer>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

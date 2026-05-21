@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DEV.STATION // Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=JetBrains+Mono:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="login">
+
+<div class="wrapper auth-shell">
+
+    <div class="top-bar">
+        <div class="logo">
+            <span class="logo-dot"></span>
+            <span>DEV.STATION</span>
+        </div>
+        <div class="status-bar">
+            <span>SYS <b>READY</b></span>
+            <span>NODE <b>ACCESS</b></span>
+            <a class="gh-link auth-link" href="signup.html">Sign up</a>
+        </div>
+    </div>
+
+    <section class="hero auth-hero">
+        <div class="hero-label">// secure access node</div>
+        <h1>enter your<br><em>command center</em></h1>
+        <p>Continue to your AI-powered developer intelligence dashboard using the session you created during signup.</p>
+    </section>
+
+    <section class="panel auth-panel">
+        <div class="panel-header">
+            <div style="display:flex;gap:14px;align-items:center;">
+                <span class="panel-tag">02</span>
+                <span class="panel-title">Login</span>
+            </div>
+            <span class="panel-meta">access dashboard</span>
+        </div>
+
+        <div class="panel-body">
+            <form id="loginForm" class="scan-grid auth-grid">
+                <input type="email" id="loginEmail" placeholder="Email Address" autocomplete="email" required>
+                <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" required>
+                <button type="submit" class="auth-submit">Access Dashboard &rarr;</button>
+            </form>
+
+            <div id="loginMsg" class="auth-message"></div>
+
+            <div class="auth-footer-note">
+                New here?
+                <a href="signup.html">Create account</a>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
