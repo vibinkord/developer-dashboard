@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>DEV.STATION // Login</title>
+<title>DEV.STATION // Access Node</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=JetBrains+Mono:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,45 +17,74 @@
     <div class="top-bar">
         <div class="logo">
             <span class="logo-dot"></span>
-            <span>VIbin DEV.STATION</span>
+            <span>VIBIN&nbsp;<b style="color:var(--purple);">DEV.STATION</b></span>
         </div>
         <div class="status-bar">
             <span>SYS <b>READY</b></span>
-            <span>NODE <b>ACCESS</b></span>
-            <a class="gh-link auth-link" href="signup.html">Sign up</a>
+            <span>AUTH_NODE <b>ACCESS</b></span>
+            <a class="auth-link-pill" href="signup.html">Sign up &rarr;</a>
         </div>
     </div>
 
-    <section class="hero auth-hero">
-        <div class="hero-label">// secure access node</div>
-        <h1>enter your<br><em>command center</em></h1>
-        <p>hi this is a web pagepowered developer intelligence dashboard using the session you created during signup.</p>
-    </section>
+    <div class="auth-split">
 
-    <section class="panel auth-panel">
-        <div class="panel-header">
-            <div style="display:flex;gap:14px;align-items:center;">
-                <span class="panel-tag">02</span>
-                <span class="panel-title">Login</span>
+        <!-- LEFT: brand pane -->
+        <aside class="auth-aside">
+            <div class="hero-label">// secure access node</div>
+            <h1 class="auth-display">enter your<br><em>command center</em></h1>
+            <p class="auth-lede">Continue to your AI-powered developer intelligence dashboard using the session you created at signup. All handles auto-load from your saved profile.</p>
+
+            <ul class="auth-feature-list">
+                <li><span class="bullet-tag">01</span><span>Unified GitHub, LeetCode &amp; Codeforces analytics</span></li>
+                <li><span class="bullet-tag">02</span><span>Groq-powered code review workbench</span></li>
+                <li><span class="bullet-tag">03</span><span>Persistent handles, instant dashboard on revisit</span></li>
+            </ul>
+
+            <div class="auth-aside-foot">
+                <span class="brand-flair">&lt;/&gt; HAPPY HACKING</span>
             </div>
-            <span class="panel-meta">access dashboard</span>
-        </div>
+        </aside>
 
-        <div class="panel-body">
-            <form id="loginForm" class="scan-grid auth-grid">
-                <input type="email" id="loginEmail" placeholder="Email Address" autocomplete="email" required>
-                <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" required>
-                <button type="submit" class="auth-submit">Access Dashboard &rarr;</button>
-            </form>
-
-            <div id="loginMsg" class="auth-message"></div>
-
-            <div class="auth-footer-note">
-                New here?
-                <a href="signup.html">Create account</a>
+        <!-- RIGHT: login form -->
+        <section class="panel auth-panel">
+            <div class="panel-header">
+                <div style="display:flex;gap:14px;align-items:center;">
+                    <span class="panel-tag">AUTH</span>
+                    <span class="panel-title">Login</span>
+                </div>
+                <span class="panel-meta">access dashboard</span>
             </div>
-        </div>
-    </section>
+
+            <div class="panel-body">
+                <form id="loginForm" class="scan-grid auth-grid">
+                    <label class="field">
+                        <span class="field-label">Email</span>
+                        <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email" required>
+                    </label>
+                    <label class="field">
+                        <span class="field-label">Password</span>
+                        <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" required>
+                    </label>
+                    <button type="submit" class="auth-submit">Access Dashboard &rarr;</button>
+                </form>
+
+                <div id="loginMsg" class="auth-message"></div>
+
+                <div class="auth-divider"><span>OR</span></div>
+
+                <div class="auth-footer-note">
+                    New here?
+                    <a href="signup.html">Create account &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <span>// 2026 &middot; built on AWS Lambda + Groq</span>
+        <span class="brand-flair">&lt;/&gt; HAPPY HACKING</span>
+    </footer>
 
 </div>
 

@@ -17,55 +17,98 @@
     <div class="top-bar">
         <div class="logo">
             <span class="logo-dot"></span>
-            <span>DEV.STATION</span>
+            <span>VIBIN&nbsp;<b style="color:var(--purple);">DEV.STATION</b></span>
         </div>
         <div class="status-bar">
             <span>SYS <b>READY</b></span>
-            <span>NODE <b>IDENTITY</b></span>
-            <a class="gh-link auth-link" href="login.html">Login</a>
+            <span>AUTH_NODE <b>IDENTITY</b></span>
+            <a class="auth-link-pill" href="login.html">Login &rarr;</a>
         </div>
     </div>
 
-    <section class="hero auth-hero">
-        <div class="hero-label">// create your node</div>
-        <h1>build your<br><em>developer identity</em></h1>
-        <p>Create your AI-powered developer intelligence account and save your handles for automatic dashboard loading on every visit.</p>
-    </section>
+    <div class="auth-split">
 
-    <section class="panel auth-panel">
-        <div class="panel-header">
-            <div style="display:flex;gap:14px;align-items:center;">
-                <span class="panel-tag">01</span>
-                <span class="panel-title">Sign Up</span>
+        <aside class="auth-aside">
+            <div class="hero-label">// create your node</div>
+            <h1 class="auth-display">build your<br><em>developer identity</em></h1>
+            <p class="auth-lede">One account links your GitHub, LeetCode, and Codeforces handles into a single AI-powered intelligence layer — analytics, code review, contest tracking, all in one place.</p>
+
+            <ul class="auth-feature-list">
+                <li><span class="bullet-tag">01</span><span>Save handles once, dashboard auto-loads forever</span></li>
+                <li><span class="bullet-tag">02</span><span>Cross-platform persona engine (no other tool does this)</span></li>
+                <li><span class="bullet-tag">03</span><span>Free tier, no credit card, no nonsense</span></li>
+            </ul>
+
+            <div class="auth-aside-foot">
+                <span class="brand-flair">&lt;/&gt; HAPPY HACKING</span>
             </div>
-            <span class="panel-meta">account creation</span>
-        </div>
+        </aside>
 
-        <div class="panel-body">
-            <form id="signupForm" class="scan-grid auth-grid">
-                <input type="text" id="name" placeholder="Full Name" autocomplete="name" required>
-                <input type="email" id="email" placeholder="Email Address" autocomplete="email" required>
-                <div>
-                    <input type="password" id="password" placeholder="Password" autocomplete="new-password" required>
-                    <div class="password-meta">
-                        <button type="button" id="togglePwd" class="small-ghost">Show</button>
-                        <div id="passwordStrength" class="password-strength">strength: —</div>
-                    </div>
+        <section class="panel auth-panel">
+            <div class="panel-header">
+                <div style="display:flex;gap:14px;align-items:center;">
+                    <span class="panel-tag">NEW</span>
+                    <span class="panel-title">Sign Up</span>
                 </div>
-                <input type="text" id="github" placeholder="GitHub Username" autocomplete="username" required>
-                <input type="text" id="leetcode" placeholder="LeetCode Username" required>
-                <input type="text" id="codeforces" placeholder="Codeforces Handle" required>
-                <button type="submit" class="auth-submit">Create Account &rarr;</button>
-            </form>
-
-            <div id="signupMsg" class="auth-message"></div>
-
-            <div class="auth-footer-note">
-                Already have a session?
-                <a href="login.html">Log in</a>
+                <span class="panel-meta">profile registration</span>
             </div>
-        </div>
-    </section>
+
+            <div class="panel-body">
+                <form id="signupForm" class="scan-grid auth-grid">
+
+                    <div class="field-group-label">// identity</div>
+
+                    <label class="field">
+                        <span class="field-label">Full Name</span>
+                        <input type="text" id="name" placeholder="Ada Lovelace" autocomplete="name" required>
+                    </label>
+                    <label class="field">
+                        <span class="field-label">Email</span>
+                        <input type="email" id="email" placeholder="you@example.com" autocomplete="email" required>
+                    </label>
+
+                    <label class="field field-full">
+                        <span class="field-label">Password</span>
+                        <input type="password" id="password" placeholder="min. 8 characters" autocomplete="new-password" required>
+                        <div class="password-meta">
+                            <button type="button" id="togglePwd" class="small-ghost">Show</button>
+                            <div id="passwordStrength" class="password-strength">strength: —</div>
+                        </div>
+                    </label>
+
+                    <div class="field-group-label">// linked handles</div>
+
+                    <label class="field">
+                        <span class="field-label">GitHub</span>
+                        <input type="text" id="github" placeholder="octocat" autocomplete="username" required>
+                    </label>
+                    <label class="field">
+                        <span class="field-label">LeetCode</span>
+                        <input type="text" id="leetcode" placeholder="leetcoder42" required>
+                    </label>
+                    <label class="field field-full">
+                        <span class="field-label">Codeforces</span>
+                        <input type="text" id="codeforces" placeholder="tourist" required>
+                    </label>
+
+                    <button type="submit" class="auth-submit">Create Account &rarr;</button>
+                </form>
+
+                <div id="signupMsg" class="auth-message"></div>
+
+                <div class="auth-footer-note">
+                    Already have a session?
+                    <a href="login.html">Log in &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <span>// 2026 &middot; built on AWS Lambda + Groq</span>
+        <span class="brand-flair">&lt;/&gt; HAPPY HACKING</span>
+    </footer>
 
 </div>
 

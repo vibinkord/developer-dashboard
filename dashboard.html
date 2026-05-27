@@ -17,13 +17,13 @@
     <div class="top-bar">
         <div class="logo">
             <span class="logo-dot"></span>
-            <span>Vibin DEV.STATION</span>
+            <span>VIBIN&nbsp;<b style="color:var(--purple);">DEV.STATION</b></span>
         </div>
         <div class="status-bar">
             <span>SYS <b>ONLINE</b></span>
             <span>NODE <b>US-EAST-1</b></span>
             <span id="clock">--:--:--</span>
-            <button onclick="logout()">Logout</button>
+            <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
     </div>
 
@@ -33,6 +33,9 @@
         <p>A personalized developer intelligence platform that loads your saved handles, tracks your public developer footprint, and keeps exploratory scans separate from your identity-driven dashboard.</p>
     </section>
 
+    <!-- ===================================== -->
+    <!-- 01 — MY DASHBOARD (auto-loaded)       -->
+    <!-- ===================================== -->
     <section class="panel">
         <div class="panel-header">
             <div style="display:flex;gap:14px;align-items:center;">
@@ -60,6 +63,9 @@
         </div>
     </section>
 
+    <!-- ===================================== -->
+    <!-- 02 — EXPLORE DEVELOPERS               -->
+    <!-- ===================================== -->
     <section class="panel">
         <div class="panel-header">
             <div style="display:flex;gap:14px;align-items:center;">
@@ -71,10 +77,19 @@
         <div class="panel-body">
             <form id="exploreForm">
                 <div class="scan-grid">
-                    <input type="text" id="exploreGithub" placeholder="GitHub Username" autocomplete="off">
-                    <input type="text" id="exploreLeetcode" placeholder="LeetCode Username" autocomplete="off">
-                    <input type="text" id="exploreCodeforces" placeholder="Codeforces Handle" autocomplete="off">
-                    <button type="submit" id="exploreScanBtn">Scan Developer</button>
+                    <label class="field">
+                        <span class="field-label">GitHub</span>
+                        <input type="text" id="exploreGithub" placeholder="username" autocomplete="off">
+                    </label>
+                    <label class="field">
+                        <span class="field-label">LeetCode</span>
+                        <input type="text" id="exploreLeetcode" placeholder="username" autocomplete="off">
+                    </label>
+                    <label class="field">
+                        <span class="field-label">Codeforces</span>
+                        <input type="text" id="exploreCodeforces" placeholder="handle" autocomplete="off">
+                    </label>
+                    <button type="submit" id="exploreScanBtn" class="scan-action-btn">Scan Developer &rarr;</button>
                 </div>
             </form>
 
@@ -83,6 +98,9 @@
         </div>
     </section>
 
+    <!-- ===================================== -->
+    <!-- 03 — GITHUB PROFILE SCAN              -->
+    <!-- ===================================== -->
     <section class="panel">
         <div class="panel-header">
             <div style="display:flex;gap:14px;align-items:center;">
@@ -100,7 +118,9 @@
         </div>
     </section>
 
-    <!-- moved LeetCode panel directly under GitHub Profile Scan for clearer flow -->
+    <!-- ===================================== -->
+    <!-- 04 — LEETCODE ANALYTICS               -->
+    <!-- ===================================== -->
     <section class="panel">
         <div class="panel-header">
             <div style="display:flex;gap:14px;align-items:center;">
@@ -120,10 +140,13 @@
         </div>
     </section>
 
+    <!-- ===================================== -->
+    <!-- 05 — UPCOMING CONTESTS                -->
+    <!-- ===================================== -->
     <section class="panel">
         <div class="panel-header">
             <div style="display:flex;gap:14px;align-items:center;">
-                <span class="panel-tag">04</span>
+                <span class="panel-tag">05</span>
                 <span class="panel-title">Upcoming Contests</span>
             </div>
             <span class="panel-meta">GET /contests</span>
@@ -134,10 +157,13 @@
         </div>
     </section>
 
+    <!-- ===================================== -->
+    <!-- 06 — AI CODE REVIEW WORKBENCH         -->
+    <!-- ===================================== -->
     <section class="panel">
         <div class="panel-header">
             <div style="display:flex;gap:14px;align-items:center;">
-                <span class="panel-tag">05</span>
+                <span class="panel-tag">06</span>
                 <span class="panel-title">AI Code Review &middot; Workbench</span>
             </div>
             <span class="panel-meta">POST /review &middot; groq</span>
@@ -177,8 +203,6 @@
             </div>
         </div>
     </section>
-
-    
 
     <footer>
         <span>// 2026 &middot; built on AWS Lambda + Groq</span>
