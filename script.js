@@ -627,23 +627,6 @@ function extractLinkedInPostText(payload) {
     return '';
 }
 
-function renderLinkedInPostResult(resultDiv, content, isError = false) {
-    const safeContent = (content || '').trim() || (isError ? 'Unable to generate a LinkedIn post.' : 'No content returned');
-    const cardClass = isError ? 'error-message' : 'scan-card';
-    const title = isError ? 'LinkedIn Post Generator Error' : 'Generated LinkedIn Post';
-
-    resultDiv.innerHTML = `
-        <div class="${cardClass}">
-            <div class="panel-title" style="margin-bottom:18px;">
-                ${escapeHtml(title)}
-            </div>
-            <div style="white-space: pre-wrap; line-height: 1.8;">
-                ${escapeHtml(safeContent)}
-            </div>
-        </div>
-    `;
-}
-
 async function handleSignup(event) {
     if (event) {
         event.preventDefault();
@@ -788,6 +771,7 @@ async function loadMyDashboard() {
         }
         console.error('[Load Dashboard] Error:', error);
     }
+    console.log(user);
 }
 
 function initAuthPage() {
@@ -937,63 +921,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-async function generateLinkedInPost() {
-    try {
-        const titleEl = document.getElementById("projectTitle");
-        const stackEl = document.getElementById("techStack");
-        const descEl = document.getElementById("projectDescription");
-        const resultDiv = document.getElementById("linkedinPostResult");
-
-        if (!titleEl || !stackEl || !descEl || !resultDiv) {
-            console.error('Missing required elements for LinkedIn post generator');
-            return;
-        }
-
-        const title = titleEl.value?.trim() || '';
-        const stack = stackEl.value?.trim() || '';
-        const description = descEl.value?.trim() || '';
-
-        if (!title || !stack || !description) {
-            resultDiv.innerHTML = `<div class="error-message">Please fill in all fields: Project Title, Tech Stack, and Description</div>`;
-            return;
-        }
-
-        resultDiv.innerHTML = `<div class="loading">generating linkedin post...</div>`;
-
-        const response = await fetch(`${API_BASE}/career-tools`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "linkedin-post", title, stack, description })
-        });
-
-        const data = await response.json();
-
-        console.log("[LinkedIn Post] Status:", response.status);
-        console.log("[LinkedIn Post] Response:", data);
-
-        if (!response.ok) {
-            const errorMsg = data?.error || data?.message || `Server error (${response.status})`;
-            resultDiv.innerHTML = `<div class="error-message">${escapeHtml(errorMsg)}</div>`;
-            return;
-        }
-
-        const content = data?.result || data?.body || data?.message || '';
-        if (!content) {
-            resultDiv.innerHTML = `<div class="error-message">No response returned from server</div>`;
-            return;
-        }
-
-        resultDiv.innerHTML = `
-            <div class="scan-card">
-                <div class="panel-title" style="margin-bottom:18px;">Generated LinkedIn Post</div>
-                <div style="white-space: pre-wrap; line-height: 1.8;">${escapeHtml(content)}</div>
-            </div>
-        `;
-    } catch (error) {
-        const resultDiv = document.getElementById("linkedinPostResult");
-        if (resultDiv) {
-            resultDiv.innerHTML = `<div class="error-message">Failed to generate post: ${escapeHtml(error?.message || 'Unknown error')}</div>`;
-        }
-        console.error('[LinkedIn Post] Error:', error);
-    }
-}
